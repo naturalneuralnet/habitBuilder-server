@@ -162,18 +162,27 @@ export const signup = async (req, res) => {
 
   // check if the data is there, check if roles is an array and has a lenght
   if (!username || !pwd) {
-    res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   // check for duplicates, no two users with the same username
   // if you want to recieve a promise then you need to use exec
-  const duplicate = await User.findOne({ username })
+  // const duplicateUsername = await User.findOne({ username })
+  //   .collation({ locale: "en", strength: 2 })
+  //   .lean()
+  //   .exec();
+
+  // if (duplicateUsername) {
+  //   return res.status(409).json({ message: "Duplicate Username" });
+  // }
+
+  const duplicateEmail = await User.findOne({ email })
     .collation({ locale: "en", strength: 2 })
     .lean()
     .exec();
 
-  if (duplicate) {
-    return res.status(409).json({ message: "Duplicate Username" });
+  if (duplicateEmail) {
+    return res.status(409).json({ message: "Duplicate Email" });
   }
 
   /// hash the password

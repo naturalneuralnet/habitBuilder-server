@@ -1,4 +1,5 @@
-const allowedOrigins = ["http://localhost:3000"];
+// http://localhost:3000
+const allowedOrigins = ["https://habitmaker.onrender.com/"];
 
 const corsOptions = {
   origin: (origin, callback) => {
