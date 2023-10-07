@@ -21,7 +21,7 @@ const sendConfirmationEmail = (sender, pass, name, email, confirmationCode) => {
       html: `<h1>Email Confirmation</h1>
         <h2>Hello ${name}</h2>
         <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
-        <a href=https://localhost:3000/auth/verify/${confirmationCode}> Click here</a>
+        <a href=https://habitmaker.onrender.com/auth/verify/${confirmationCode}> Click here</a>
         </div>`,
     })
     .catch((err) => console.log(err));
