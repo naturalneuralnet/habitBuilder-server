@@ -1,9 +1,5 @@
 import nodemailer from "nodemailer";
 
-// console.log("INSIDE NODEMAILER");
-// console.log(process.env.REFRESH_TOKEN_SECRET);
-// console.log(process.env.PORT);
-
 const sendConfirmationEmail = (sender, pass, name, email, confirmationCode) => {
   const transport = nodemailer.createTransport({
     service: "outlook",
