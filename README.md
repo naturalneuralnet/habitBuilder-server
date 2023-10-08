@@ -22,11 +22,11 @@ Run `npm run dev`to run the server locally.
 **Enviroment Variables:**
 You will also need to add enviroment variables in a .env file
 
-MONGO_URL: A mongodb atlas url
-ACCESS_TOKEN_SECRET: A SSH key, can be generated with the ssh-keygen command in the terminal. 
-REFRESH_TOKEN_SECRET:A SSH key, can be generated with the ssh-keygen command in the terminal. 
-VERIFICATION_EMAIL: This must be an outlook email address. To use other email providers, adjust the nodemailer config. 
-VERIFICATION_EMAIL_PASSWORD:Verification email address password.
+- MONGO_URL: A mongodb atlas url
+- ACCESS_TOKEN_SECRET: A SSH key, can be generated with the ssh-keygen  command in the terminal. 
+- REFRESH_TOKEN_SECRET:A SSH key, can be generated with the ssh-keygen command in the terminal. 
+- VERIFICATION_EMAIL: This must be an outlook email address. To use other email providers, adjust the nodemailer config. 
+- VERIFICATION_EMAIL_PASSWORD:Verification email address password.
 
 ## Technologies
 
