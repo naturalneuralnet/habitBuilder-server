@@ -170,18 +170,6 @@ export const deleteUser = asyncHandler(async (req, res) => {
   res.json(reply);
 });
 
-/// ideal habit strucutre
-// {
-//   name: "Journaling"
-//   years: {
-//     {year: "2023",
-//   percent: "0",
-//   january: [],
-//   febuary: [],
-// }
-//   }
-// }
-
 export const getHabitsComplex = async (req, res) => {
   try {
     // get the user id
