@@ -25,8 +25,12 @@ const UserSchema = new mongoose.Schema(
     },
     roles: {
       type: [String],
-      enum: ["user", "admin", "superadmin"],
+      enum: ["user", "admin", "superadmin", "guest"],
       default: "user",
+    },
+    expireAt: {
+      type: Date,
+      index: { expires: "10m" },
     },
   },
   // This automatically gives us created date and updated date

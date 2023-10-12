@@ -1,4 +1,5 @@
 // http://localhost:3000
+// https://habitmaker.onrender.com
 const allowedOrigins = ["https://habitmaker.onrender.com"];
 
 const corsOptions = {

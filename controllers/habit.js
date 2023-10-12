@@ -203,3 +203,21 @@ export const getHabitsComplex = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+// export const deleteHabitsByUserID = asyncHandler(async (req, res) => {
+//   const { userID } = req;
+//   console.log(userID);
+//   //confirm habit exists
+//   console.log("INSIDE DELETE HABIT");
+//   const habit = await Habit.findById({ user: userID }).exec();
+
+//   // if (!habit) {
+//   //   return res.status(400).json({ message: "Habit not found" });
+//   // }
+
+//   // const result = await habit.deleteOne();
+
+//   // const reply = `Habit '${result.name}' deleted`;
+
+//   // return res.json(reply);
+// });

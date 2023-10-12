@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import sendConfirmationEmail from "../config/nodeMailerConfig.js";
+// import { deleteHabitsByUserID } from "./habit.js";
 
 // @desc Login
 // @route POST /auth
@@ -21,13 +22,9 @@ export const login = asyncHandler(async (req, res) => {
   /// chec if the user exists
   const foundUser = await User.findOne({ username }).exec();
 
-  console.log("FOUND USER");
-  console.log(foundUser);
-
   // if the user is not found or if the user is inactive
   // this should be two separate checks, if the user is found and if the user is active or pending
   if (!foundUser || foundUser.status === "Pending") {
-    console.log("PENDING ISSUE");
     return res
       .status(401)
       .json({ message: "Pending Account: Please Verify Your Email." });
@@ -83,7 +80,7 @@ export const login = asyncHandler(async (req, res) => {
   /// the server sets the cookie
   /// the client never handles the refersh token
   /// but make sure that when the client sends a request to teh refresh endpoint, this cookie is sent with it
-  console.log("Sending access token");
+
   res.json({ accessToken });
 });
 
@@ -176,12 +173,13 @@ export const signup = async (req, res) => {
   //   return res.status(409).json({ message: "Duplicate Username" });
   // }
 
-  const duplicateEmail = await User.findOne({ email })
+  const duplicateEmail = await User.findOne({ email: userEmail })
     .collation({ locale: "en", strength: 2 })
     .lean()
     .exec();
 
   if (duplicateEmail) {
+    console.log("duplicate email");
     return res.status(409).json({ message: "Duplicate Email" });
   }
 
@@ -212,6 +210,7 @@ export const signup = async (req, res) => {
     const sender = process.env.VERIFICATION_EMAIL;
 
     const pass = process.env.VERIFICATION_EMAIL_PASS;
+    console.log("EMAIL IS STILL SENT");
     sendConfirmationEmail(
       sender,
       pass,
@@ -250,3 +249,124 @@ export const verify = async (req, res) => {
 
   res.json({ message: `${updatedUser.username} account verified.` });
 };
+
+// @desc SignUp
+// @route POST /auth/guest
+// @access Public - for guest usage
+export const guest = async (req, res) => {
+  const { username, pwd, userEmail } = req.body;
+  console.log(pwd);
+
+  /// hash the password
+  const hashedPwd = await bcrypt.hash(pwd, 10);
+
+  /// create and store new user
+
+  const token = jwt.sign(
+    { email: req.body.userEmail },
+    process.env.USER_VERIFICATION_SECRET
+  );
+
+  const today = new Date(); // get today's date
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1); // Add 1 to today's date and set it to tomorrow
+  // console.log("Today is:", today); // 👉 Tomorrow is Mon Nov 07 2022
+  // today.setMinutes(today.getMinutes() + 10);
+  // console.log("Today is:", today); // 👉 Tomorrow is Mon Nov 07 2022
+
+  /// if there is nor roles object then create the user without it
+  const userObject = {
+    username,
+    password: hashedPwd,
+    email: userEmail,
+    confirmationCode: token,
+    status: "Active",
+    roles: "guest",
+    expireAt: tomorrow,
+  };
+
+  // /// create the user and send the confirmation email
+  const user = await User.create(userObject);
+
+  /// chec if the user exists
+  const foundUser = await User.findOne({ username }).exec();
+
+  setTimeout(() => {
+    const result = deleteHabitsByUserID({ userID: foundUser._id });
+    console.log("Habits Deleted");
+  }, 1000 * 60 * 24);
+
+  /// create access token
+  /// jwt.sign to create the access token
+  const accessToken = jwt.sign(
+    /// contains object
+    /// user information is inserted
+    /// will need to be destructured in the front end/
+    // uses the access token secret in here
+    /// 10 seconds expiry to test it
+    {
+      UserInfo: {
+        userId: foundUser._id,
+        username: foundUser.username,
+        roles: foundUser.roles,
+      },
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "1h" }
+  );
+
+  /// create refresh token
+  /// save as above
+  const refreshToken = jwt.sign(
+    { username: foundUser.username },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: "5h" }
+  );
+
+  // Create secure cookie with refresh token
+  /// refresh token is used to create a cookie response, anming it jwt
+  res.cookie("jwt", refreshToken, {
+    /// options for cookie
+    httpOnly: true, //accessible only by web server
+    secure: true, //https
+    sameSite: "None", //cross-site cookie - we do want to allow crosssite cookie becuase different hosts for front and back end
+    maxAge: 5 * 60 * 60 * 1000, //cookie expiry: set to match the refresh token - 1 day 7 days a week
+  });
+
+  /// expire guest after a certain time
+  /// add all guests to guest collection
+
+  /// expire them all?
+
+  if (!user) {
+    res.status(500).json({ message: "Unable to create guest" });
+  } else {
+    res.status(200).json({
+      accessToken,
+      message: "Guest was created successfully",
+    });
+  }
+};
+
+const deleteHabitsByUserID = asyncHandler(async (req, res) => {
+  const { userID } = req;
+  console.log(req);
+  //confirm habit exists
+  console.log("INSIDE DELETE HABIT");
+  const habits = await Habit.find({ user: userID });
+  console.log(habits);
+  // if (!habit) {
+  //   return res.status(400).json({ message: "Habit not found" });
+  // }
+
+  for (let i = 0; i < habits.length; i++) {
+    habits[i].deleteOne();
+  }
+
+  // console.log("habits deleted");
+  // const result = await habit.deleteOne();
+
+  const reply = `Habits deleted`;
+
+  return reply;
+});
