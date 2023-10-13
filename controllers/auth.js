@@ -260,19 +260,16 @@ export const guest = async (req, res) => {
   /// hash the password
   const hashedPwd = await bcrypt.hash(pwd, 10);
 
-  /// create and store new user
-
-  const token = jwt.sign(
-    { email: req.body.userEmail },
-    process.env.USER_VERIFICATION_SECRET
-  );
+  // const token = jwt.sign(
+  //   { email: req.body.userEmail },
+  //   process.env.USER_VERIFICATION_SECRET
+  // );
 
   const today = new Date(); // get today's date
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1); // Add 1 to today's date and set it to tomorrow
-  // console.log("Today is:", today); // 👉 Tomorrow is Mon Nov 07 2022
+
   // today.setMinutes(today.getMinutes() + 10);
-  // console.log("Today is:", today); // 👉 Tomorrow is Mon Nov 07 2022
 
   /// if there is nor roles object then create the user without it
   const userObject = {
@@ -300,10 +297,6 @@ export const guest = async (req, res) => {
   /// jwt.sign to create the access token
   const accessToken = jwt.sign(
     /// contains object
-    /// user information is inserted
-    /// will need to be destructured in the front end/
-    // uses the access token secret in here
-    /// 10 seconds expiry to test it
     {
       UserInfo: {
         userId: foundUser._id,
@@ -333,11 +326,6 @@ export const guest = async (req, res) => {
     maxAge: 5 * 60 * 60 * 1000, //cookie expiry: set to match the refresh token - 1 day 7 days a week
   });
 
-  /// expire guest after a certain time
-  /// add all guests to guest collection
-
-  /// expire them all?
-
   if (!user) {
     res.status(500).json({ message: "Unable to create guest" });
   } else {
@@ -350,21 +338,14 @@ export const guest = async (req, res) => {
 
 const deleteHabitsByUserID = asyncHandler(async (req, res) => {
   const { userID } = req;
-  console.log(req);
+
   //confirm habit exists
-  console.log("INSIDE DELETE HABIT");
+
   const habits = await Habit.find({ user: userID });
-  console.log(habits);
-  // if (!habit) {
-  //   return res.status(400).json({ message: "Habit not found" });
-  // }
 
   for (let i = 0; i < habits.length; i++) {
     habits[i].deleteOne();
   }
-
-  // console.log("habits deleted");
-  // const result = await habit.deleteOne();
 
   const reply = `Habits deleted`;
 
