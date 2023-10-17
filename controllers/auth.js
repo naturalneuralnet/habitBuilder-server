@@ -211,14 +211,14 @@ export const signup = async (req, res) => {
 
     const pass = process.env.VERIFICATION_EMAIL_PASS;
     console.log("EMAIL IS STILL SENT");
-    sendConfirmationEmail(
-      sender,
-      pass,
-      user.username,
-      user.email,
-      user.confirmationCode
-    );
-    res.status(200).json({
+    // sendConfirmationEmail(
+    //   sender,
+    //   pass,
+    //   user.username,
+    //   user.email,
+    //   user.confirmationCode
+    // );
+    return res.status(200).json({
       message: "User was registered successfully! Please check your email.",
     });
   }
@@ -276,7 +276,7 @@ export const guest = async (req, res) => {
     username,
     password: hashedPwd,
     email: userEmail,
-    confirmationCode: token,
+
     status: "Active",
     roles: "guest",
     expireAt: tomorrow,
