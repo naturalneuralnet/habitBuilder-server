@@ -45,7 +45,11 @@ You will also need to add enviroment variables in a .env file
 - Sending Emails with NodeMailer Tutorial on [BetterProgramming](https://betterprogramming.pub/how-to-create-a-signup-confirmation-email-with-node-js-c2fea602872a)
 
 
+## License
 
+You can find the License for this project [here](LICENSE.md)
+
+This project is licensed under the terms of the MIT license.
 
 
 
