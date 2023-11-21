@@ -11,11 +11,9 @@ const corsOptions = {
       callback(new Error("Not allowed by cors"));
     }
   },
-  /// sets the allow credentials header
   credentials: true,
-  /// usually this is 204 but some devices have errors on 204
+
   optionsSuccessStatus: 200,
 };
 
 export default corsOptions;
-//module.exports = corsOptions;

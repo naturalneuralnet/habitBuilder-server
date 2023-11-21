@@ -16,22 +16,19 @@ import { logEvents, logger } from "./middleware/logger.js";
 
 // CONFIGURATION
 dotenv.config();
-// use express for the app
+
 const app = express();
 app.use(logger);
-// use json
+
 app.use(express.json());
-// use helmet to protect api?
-//app.use(helmet());
-//app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-// use morgan for something
+
 app.use(morgan("common"));
-// body parser to parse objects?
+
 app.use(cookieParser());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// use cors
+
 app.use(cors(corsOptions));
 
 //// ROUTES // splitting the enpoints

@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import sendConfirmationEmail from "../config/nodeMailerConfig.js";
-// import { deleteHabitsByUserID } from "./habit.js";
 
 // @desc Login
 // @route POST /auth
@@ -19,7 +18,7 @@ export const login = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  /// chec if the user exists
+  /// check if the user exists
   const foundUser = await User.findOne({ username }).exec();
 
   // if the user is not found or if the user is inactive
@@ -41,11 +40,6 @@ export const login = asyncHandler(async (req, res) => {
   /// create access token
   /// jwt.sign to create the access token
   const accessToken = jwt.sign(
-    /// contains object
-    /// user information is inserted
-    /// will need to be destructured in the front end/
-    // uses the access token secret in here
-    /// 10 seconds expiry to test it
     {
       UserInfo: {
         userId: foundUser._id,
@@ -66,7 +60,7 @@ export const login = asyncHandler(async (req, res) => {
   );
 
   // Create secure cookie with refresh token
-  /// refresh token is used to create a cookie response, anming it jwt
+  /// refresh token is used to create a cookie response, naming it jwt
   res.cookie("jwt", refreshToken, {
     /// options for cookie
     httpOnly: true, //accessible only by web server
@@ -74,12 +68,6 @@ export const login = asyncHandler(async (req, res) => {
     sameSite: "None", //cross-site cookie - we do want to allow crosssite cookie becuase different hosts for front and back end
     maxAge: 7 * 24 * 60 * 60 * 1000, //cookie expiry: set to match the refresh token - 1 day 7 days a week
   });
-
-  // Send accessToken containing username and roles
-  /// sends back the access token , so the client recieves the accesstoken,
-  /// the server sets the cookie
-  /// the client never handles the refersh token
-  /// but make sure that when the client sends a request to teh refresh endpoint, this cookie is sent with it
 
   res.json({ accessToken });
 });
@@ -98,10 +86,7 @@ export const refresh = async (req, res) => {
 
   /// set the refresh token variable to that cookie
   const refreshToken = cookies.jwt;
-  /// use jwt to verify the refresh token
-  // pass in the refresh token vairaibale and the refresh token secret
-  /// pass in asynchahnlder to chek for errors in the verify process
-  /// send a 403 forbidden response
+
   jwt.verify(
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET,
@@ -164,14 +149,6 @@ export const signup = async (req, res) => {
 
   // check for duplicates, no two users with the same username
   // if you want to recieve a promise then you need to use exec
-  // const duplicateUsername = await User.findOne({ username })
-  //   .collation({ locale: "en", strength: 2 })
-  //   .lean()
-  //   .exec();
-
-  // if (duplicateUsername) {
-  //   return res.status(409).json({ message: "Duplicate Username" });
-  // }
 
   const duplicateEmail = await User.findOne({ email: userEmail })
     .collation({ locale: "en", strength: 2 })
@@ -210,14 +187,14 @@ export const signup = async (req, res) => {
     const sender = process.env.VERIFICATION_EMAIL;
 
     const pass = process.env.VERIFICATION_EMAIL_PASS;
-    console.log("EMAIL IS STILL SENT");
-    // sendConfirmationEmail(
-    //   sender,
-    //   pass,
-    //   user.username,
-    //   user.email,
-    //   user.confirmationCode
-    // );
+
+    sendConfirmationEmail(
+      sender,
+      pass,
+      user.username,
+      user.email,
+      user.confirmationCode
+    );
     return res.status(200).json({
       message: "User was registered successfully! Please check your email.",
     });
@@ -229,11 +206,6 @@ export const signup = async (req, res) => {
 // @access Public - to confirm the code
 
 export const verify = async (req, res) => {
-  // console.log("INSIDE VERIFY");
-  // console.log(req.params);
-  // const { confirmationCode } = req.params;
-  // console.log(confirmationCode);
-
   const user = await User.findOne({
     confirmationCode: req.params.confirmationCode,
   });
@@ -259,11 +231,6 @@ export const guest = async (req, res) => {
 
   /// hash the password
   const hashedPwd = await bcrypt.hash(pwd, 10);
-
-  // const token = jwt.sign(
-  //   { email: req.body.userEmail },
-  //   process.env.USER_VERIFICATION_SECRET
-  // );
 
   const today = new Date(); // get today's date
   const tomorrow = new Date(today);

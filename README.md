@@ -1,6 +1,6 @@
 ## About
 
-Express server with REST API for MongoDB CRUD functions. Backend for the habitBuilder webapp. Can be found here: 
+Express server with REST API for MongoDB CRUD functions. Backend for the habitBuilder webapp. Can be found here: https://habitmaker.onrender.com
 
 ## Table of Contents
 
