@@ -1,6 +1,8 @@
 ## About
 
-Express server with REST API for MongoDB CRUD functions. Backend for the habitBuilder webapp. Can be found here: https://habitmaker.onrender.com
+Express server with REST API for MongoDB CRUD functions. 
+Server for the habitmaker webapp. 
+Can be found here: https://habitmaker.onrender.com
 
 ## Table of Contents
 
@@ -10,10 +12,12 @@ Express server with REST API for MongoDB CRUD functions. Backend for the habitBu
 
 ## Local Usage
 
-For the entire application to work, you must run the front end in an additional terminal. 
+For the entire application to work, you must run the habitMaker-client in a separate terminal. You can find the code [here](https://github.com/naturalneuralnet/habitBuilder-client)
 
 __Changes before local usage:__
-Change the allowedOrigins endpoint to the localhost you are running the frontend on.
+Inside config/corsOptions.js change the allowedOrigins endpoint to the one you are running the client on. For example:
+
+![Alt text](image.png)
 
 Run `npm install` to install the project dependencies.
 
