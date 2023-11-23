@@ -1,8 +1,10 @@
 ## About
 
 Express server with REST API for MongoDB CRUD functions. 
-Server for the habitmaker webapp. 
-Can be found here: https://habitmaker.onrender.com
+
+Backend for the habitmaker webapp.
+
+The app can be found here: https://habitmaker.onrender.com
 
 ## Table of Contents
 
@@ -12,7 +14,7 @@ Can be found here: https://habitmaker.onrender.com
 
 ## Local Usage
 
-For the entire application to work, you must run the habitMaker-client in a separate terminal. You can find the code [here](https://github.com/naturalneuralnet/habitBuilder-client)
+For the entire application to work, you must run this server simultaneously with the habitMaker-client in a separate terminal. You can find the client code [here](https://github.com/naturalneuralnet/habitBuilder-client)
 
 __Changes before local usage:__
 Inside config/corsOptions.js change the allowedOrigins endpoint to the one you are running the client on. For example:
@@ -21,12 +23,12 @@ Inside config/corsOptions.js change the allowedOrigins endpoint to the one you a
 
 Run `npm install` to install the project dependencies.
 
-Run `npm run dev`to run the server locally. 
+Run `npm run dev` to run the server locally. 
 
 **Enviroment Variables:**
 You will also need to add enviroment variables in a .env file
 
-- MONGO_URL: A mongodb atlas url
+- MONGO_URL: A URL to a MongoDB Atlas database you own
 - ACCESS_TOKEN_SECRET: A SSH key, can be generated with the ssh-keygen  command in the terminal. 
 - REFRESH_TOKEN_SECRET:A SSH key, can be generated with the ssh-keygen command in the terminal. 
 - VERIFICATION_EMAIL: This must be an outlook email address. To use other email providers, adjust the nodemailer config. 
