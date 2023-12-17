@@ -13,6 +13,9 @@ const HabitSchema = new mongoose.Schema(
     year: {
       type: Array,
     },
+    goal: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );

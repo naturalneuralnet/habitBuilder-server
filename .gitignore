@@ -3,6 +3,6 @@
 
 /package-lock.json
 
-# /config/corsOptions.js
+/config/corsOptions.js
 /data
 /logs

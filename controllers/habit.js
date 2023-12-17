@@ -32,9 +32,9 @@ export const getHabitsSimple = async (req, res) => {
 export const getAllHabits = async (req, res) => {
   try {
     const habits = await Habit.find();
-    res.status(200).json(habits);
+    return res.status(200).json(habits);
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    return res.status(404).json({ message: error.message });
   }
 };
 
@@ -53,7 +53,7 @@ export const getHabitsByUserID = async (req, res) => {
 };
 
 export const createHabit = asyncHandler(async (req, res) => {
-  const { name, user } = req.body;
+  const { name, user, goal } = req.body;
 
   console.log(name, user);
   /// check if the dat is there
@@ -86,6 +86,7 @@ export const createHabit = asyncHandler(async (req, res) => {
       [],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ],
+    goal: goal,
   };
 
   const habit = await Habit.create(habitObject);
@@ -98,9 +99,9 @@ export const createHabit = asyncHandler(async (req, res) => {
 });
 
 export const updateHabit = asyncHandler(async (req, res) => {
-  const { id, user, name, year } = req.body;
+  const { id, user, name, year, goal } = req.body;
 
-  if (!id || !name || !user || !year) {
+  if (!id || !name || !user || !year || !goal) {
     res.status(400).json({ message: "All fields required" });
   }
 
@@ -127,6 +128,7 @@ export const updateHabit = asyncHandler(async (req, res) => {
   habit.name = name;
   habit.user = user;
   habit.year = year;
+  habit.goal = goal;
 
   /// save the updated user
 
@@ -136,6 +138,7 @@ export const updateHabit = asyncHandler(async (req, res) => {
       name: name,
       user: user,
       year: year,
+      goal: goal,
     }
   );
 
